@@ -132,31 +132,50 @@ d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b
 1 d d d d b b d 1 d d d d d d d 
 b b b b b b b e b b b b b b b e 
 `;
+            case "image8":
+            case "myImage1":return img`
+1 1 b b b b b b b b b b b b 1 1 
+1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b c c b b b b b b c 
+c c c c c c b c c b c c c c c c 
+b e e e e e c b b c e e e e e b 
+b e e e e e e e e e e e e e e b 
+b c e e e e e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
+`;
+            case "image9":
+            case "myImage2":return img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . b b b b b b b b b b b b . . 
+. . b 4 4 e e e e e e e e b . . 
+. b 4 4 e e e e e e e e e b b . 
+. 1 . 1 . 1 b b b b b b b e b . 
+. . . . . . 1 b e e e e e e b . 
+. 3 3 3 3 . . b e e e e e e b . 
+. 1 c 3 3 3 1 b e e e e e e b . 
+. b 1 c 1 3 b e e e e e e e b . 
+. b e e e e e e e e e e e e b . 
+. b b b b b b b b b b b b b b . 
+. . b . . . . . . . . . . b . . 
+`;
         }
         return null;
     })
 
     helpers._registerFactory("animation", function(name: string) {
         switch(helpers.stringTrim(name)) {
-            case "myAnim":
-            case "anim1":return [img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-`];
             case "skellydestroy":
             case "anim2":return [img`
 ........................
@@ -458,6 +477,324 @@ b b b b b b b e b b b b b b b e
 ..f1b1ffff..............
 ..fbfc..................
 ........................
+`];
+            case "myAnim0":
+            case "anim3":return [img`
+1 1 b b b b b b b b b b b b 1 1 
+1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b f f b b b b b b c 
+c c c c c c b f f b c c c c c c 
+b e e e e e c b b c e e e e e b 
+b e e e e e e e e e e e e e e b 
+b c e e e e e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
+`, img`
+1 1 b b b b b b b b b b b b 1 1 
+1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b f f b b b b b b c 
+c c c c c c b f f b c c c c c c 
+c c c c c c c b b c c c c c c c 
+b e e e e e c 3 3 c e e e e e b 
+b e e e e e e e e e e e e e e b 
+b c e e e e e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
+`, img`
+1 1 b b b b b b b b b b b b 1 1 
+1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
+b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b f f b b b b b b c 
+c c c c c c b f f b c c c c c c 
+c c c c c c c b b c c c c c c c 
+c c c c c c c c c c c c c c c c 
+c c c c c c 3 3 3 3 c c c c c c 
+b e e e e e c 3 3 c e e e e e b 
+b e e e e e e e e e e e e e e b 
+b c e e e e e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
+`];
+            case "walkmimic":
+            case "anim4":return [img`
+....................
+....................
+....................
+....................
+....................
+..bbbbbbbbbbbb......
+..b44eeeeeeeeb......
+.b44eeeeeeeeebb.....
+.1.1.1bbbbbbbeb.....
+......1beeeeeeb.....
+.3333..beeeeeeb.....
+.1c3331beeeeeeb.....
+.b1c13beeeeeeeb.....
+.beeeeeeeeeeeeb.....
+.bbbbbbbbbbbbbb.....
+..b..........b......
+`, img`
+....................
+....................
+....................
+....................
+....................
+...bbbbbbbbbbbbbb...
+...b44eeeeeeeeeeb...
+..b44eeeeeeeeeeebb..
+..1.1.11bbbbbbbbeb..
+........1beeeeeeeb..
+..3333...beeeeeeeb..
+..1c33331beeeeeeeb..
+..b1c133beeeeeeeeb..
+..beeeeeeeeeeeeeeb..
+..bbbbbbbbbbbbbbbb..
+...b............b...
+`, img`
+....................
+....................
+....................
+..bbbbbbbbbbbb......
+..b44eeeeeeeeb......
+.b44eeeeeeeeebb.....
+.1.1.1bbbbbbbeb.....
+......beeeeeeeb.....
+.......beeeeeeb.....
+......1beeeeeeb.....
+.3333..beeeeeeb.....
+.1c3331beeeeeeb.....
+.b1c13beeeeeeeb.....
+.beeeeeeeeeeeeb.....
+.bbbbbbbbbbbbbb.....
+..b..........b......
+`];
+            case "myAnim1":
+            case "anim5":return [img`
+1 1 b b b b b b b b b b b b 1 1 
+1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b c c b b b b b b c 
+c c c c c c b c c b c c c c c c 
+b e e e e e c b b c e e e e e b 
+b e e e e e e e e e e e e e e b 
+b c e e e e e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
+`];
+            case "walkmimic0":
+            case "anim1":return [img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . b b b b b b b b b b b b . . 
+. . b 4 4 e e e e e e e e b . . 
+. b 4 4 e e e e e e e e e b b . 
+. 1 . 1 . 1 b b b b b b b e b . 
+. . . . . . 1 b e e e e e e b . 
+. 3 3 3 3 . . b e e e e e e b . 
+. 1 c 3 3 3 1 b e e e e e e b . 
+. b 1 c 1 3 b e e e e e e e b . 
+. b e e e e e e e e e e e e b . 
+. b b b b b b b b b b b b b b . 
+. . b . . . . . . . . . . b . . 
+`, img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . b b b b b b b b b b b b . . 
+. . b 4 4 e e e e e e e e b . . 
+. b 4 4 e e e e e e e e e b b . 
+. 1 . 1 . 1 b b b b b b b e b . 
+. . . . . . 1 b e e e e e e b . 
+. . . . . . . b e e e e e e b . 
+. . 3 3 . . 1 b e e e e e e b . 
+. . . 3 3 . . b e e e e e e b . 
+. 1 c 3 3 3 1 b e e e e e e b . 
+. b 1 c 1 3 b e e e e e e e b . 
+. b e e e e e e e e e e e e b . 
+. b b b b b b b b b b b b b b . 
+. . b . . . . . . . . . . b . . 
+`, img`
+. . . . . . . . . . . . . . . . 
+. . b b b b b b b b b b b b . . 
+. . b 4 4 e e e e e e e e b . . 
+. b 4 4 e e e e e e e e e b b . 
+. 1 . 1 . 1 b b b b b b b e b . 
+. . . . . . 1 b e e e e e e b . 
+. . . . . . . b e e e e e e b . 
+. . . . . . 1 b e e e e e e b . 
+. . . . . . . b e e e e e e b . 
+3 3 3 3 . . 1 b e e e e e e b . 
+. 3 3 3 3 . . b e e e e e e b . 
+. 1 c 3 3 3 1 b e e e e e e b . 
+. b 1 c 1 3 b e e e e e e e b . 
+. b e e e e e e e e e e e e b . 
+. b b b b b b b b b b b b b b . 
+. . b . . . . . . . . . . b . . 
+`];
+            case "deathmimic":
+            case "anim7":return [img`
+....................
+....................
+....................
+....................
+....................
+.......bbbbbbbbbbbb.
+.......b44eeeeeeeeb.
+......b44eeeeeeeeebb
+......1.1.1bbbbbbbeb
+...........1beeeeeeb
+......3333..beeeeeeb
+......1c3331beeeeeeb
+......b1c13beeeeeeeb
+......beeeeeeeeeeeeb
+......bbbbbbbbbbbbbb
+.......b..........b.
+`, img`
+....................
+....................
+....................
+....................
+....................
+....................
+.......bbbbbbbbbbbb.
+.......b44eeeeeeeeb.
+......b44eeeeeeeeebb
+...........bbbbbbbeb
+.....33333..beeeeeeb
+.....31c3331beeeeeeb
+......b1c13beeeeeeeb
+......beeeeeeeeeeeeb
+......bbbbbbbbbbbbbb
+.......b..........b.
+`, img`
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+.......bbbbbbbbbbbb.
+.......b44eeeeeeeeb.
+......b44eeeeeeeeebb
+.....33333.bbbbbbbeb
+.....31c3331beeeeeeb
+.....3b1c13beeeeeeeb
+.....3beeeeeeeeeeeeb
+......bbbbbbbbbbbbbb
+.......b..........b.
+`, img`
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+.......bbbbbbbbbbbb.
+.......b44eeeeeeeeb.
+......b44eeeeeeeeebb
+.....33333.bbbbbbbeb
+.....31c3331beeeeeeb
+.....3b1c13beeeeeeeb
+.....3beeeeeeeeeeeeb
+.....3bbbbbbbbbbbbbb
+...333.b..........b.
+`];
+            case "bitemimic":
+            case "anim6":return [img`
+....................
+....................
+....................
+....................
+....................
+.......bbbbbbbbbbbb.
+.......b44eeeeeeeeb.
+......b44eeeeeeeeebb
+......1.1.1bbbbbbbeb
+...........1beeeeeeb
+......3333..beeeeeeb
+......1c3331beeeeeeb
+......b1c13beeeeeeeb
+......beeeeeeeeeeeeb
+......bbbbbbbbbbbbbb
+.......b..........b.
+`, img`
+....................
+....................
+....................
+.......bbbbbbbbbbbb.
+.......b44eeeeeeeeb.
+......b44eeeeeeeeebb
+......1.1.1bbbbbbbeb
+...........1beeeeeeb
+............beeeeeeb
+............beeeeeeb
+......3333..beeeeeeb
+......1c3331beeeeeeb
+......b1c13beeeeeeeb
+......beeeeeeeeeeeeb
+......bbbbbbbbbbbbbb
+.......b..........b.
+`, img`
+....................
+....................
+....................
+....bbbbbbbbbbbbbbb.
+....b44eeeeeeeeeeeb.
+...b44eeeeeeeeeeeebb
+...1.1.1bbbbbbbbbbeb
+........1bbeeeeeeeeb
+.........1.beeeeeeeb
+............beeeeeeb
+...3333..1.beeeeeeeb
+...1c3331bbeeeeeeeeb
+...b1c13beeeeeeeeeeb
+...beeeeeeeeeeeeeeeb
+...bbbbbbbbbbbbbbbbb
+....b.............b.
+`, img`
+....................
+....................
+....................
+....................
+....................
+....................
+....bbbbbbbbbbbbbbb.
+....b44eeeeeeeeeeeb.
+...b44eeeeeeeeeeeebb
+...1.1.1bbbbbbbbbbeb
+...3333..1.beeeeeeeb
+...1c3331bbeeeeeeeeb
+...b1c13beeeeeeeeeeb
+...beeeeeeeeeeeeeeeb
+...bbbbbbbbbbbbbbbbb
+....b.............b.
 `];
         }
         return null;

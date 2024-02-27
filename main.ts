@@ -245,7 +245,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.overlapsWith(monsterskull) && bone.value > 0) {
         bone.value += -100
     }
-    if (mySprite.overlapsWith(attackmimic) && mimic.value > 0) {
+    if (mySprite.overlapsWith(mimicsprite) && mimic.value > 0) {
         mimic.value += -50
     }
     if (bone.value <= 0) {
@@ -260,9 +260,9 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         sprites.destroy(monsterskull)
     }
     if (mimic.value <= 0) {
-        animation.stopAnimation(animation.AnimationTypes.All, attackmimic)
+        animation.stopAnimation(animation.AnimationTypes.All, mimicsprite)
         animation.runImageAnimation(
-        attackmimic,
+        mimicsprite,
         assets.animation`deathmimic`,
         200,
         false
@@ -2238,11 +2238,11 @@ let key1sprite: Sprite = null
 let swordsprite: Sprite = null
 let mySprite: Sprite = null
 let mimic: StatusBarSprite = null
-let attackmimic: Sprite = null
-attackmimic = sprites.create(assets.image`myImage2`, SpriteKind.Enemy)
+let mimicsprite: Sprite = null
+mimicsprite = sprites.create(assets.image`myImage2`, SpriteKind.Enemy)
+tiles.placeOnTile(mimicsprite, tiles.getTileLocation(40, 8))
 mimic = statusbars.create(20, 4, StatusBarKind.Health)
-tiles.placeOnTile(attackmimic, tiles.getTileLocation(100, 100))
-mimic.attachToSprite(attackmimic)
+mimic.attachToSprite(mimicsprite)
 mimic.value = 100
 tiles.setCurrentTilemap(tilemap`level`)
 mySprite = sprites.create(img`
@@ -2272,7 +2272,6 @@ key1sprite = sprites.create(assets.image`myImage`, SpriteKind.key1)
 tiles.placeOnTile(swordsprite, tiles.getTileLocation(0, 6))
 tiles.placeOnTile(key1sprite, tiles.getTileLocation(13, 2))
 monsterskull = sprites.create(assets.image`sword`, SpriteKind.Enemy)
-let chestmimic = sprites.create(assets.image`myImage1`, SpriteKind.Enemy)
 tiles.placeOnTile(monsterskull, tiles.getTileLocation(23, 8))
 bone = statusbars.create(20, 4, StatusBarKind.Health)
 bone.attachToSprite(monsterskull)
@@ -2360,22 +2359,15 @@ forever(function () {
             info.changeLifeBy(-1)
         }
     }
-    if (mySprite.tilemapLocation() == tiles.getTileLocation(35, 8) || mySprite.tilemapLocation() == tiles.getTileLocation(35, 8)) {
-        attackmimic = sprites.create(assets.image`myImage2`, SpriteKind.Enemy)
-        mimic = statusbars.create(20, 4, StatusBarKind.Health)
-        tiles.placeOnTile(attackmimic, tiles.getTileLocation(40, 8))
-        mimic.attachToSprite(attackmimic)
-        mimic.value = 100
-    }
-    if (attackmimic.overlapsWith(mySprite) && mimic.value > 0) {
+    if (mimicsprite.overlapsWith(mySprite) && mimic.value > 0) {
         animation.runImageAnimation(
-        attackmimic,
+        mimicsprite,
         assets.animation`bitemimic`,
         200,
         false
         )
         pause(800)
-        if (attackmimic.overlapsWith(mySprite) && mimic.value > 0) {
+        if (mimicsprite.overlapsWith(mySprite) && mimic.value > 0) {
             info.changeLifeBy(-1)
         }
     }

@@ -1,9 +1,4 @@
 {
-    "image1": {
-        "data": "hwQLAAoAAAAA/w8AAAAAAPAi8gAAAAAALxIiDwAAAAAvISLyAAAAAPAiIiIPAAAAAC8iIvIAAADwIiIiDwAAAC8iIvIAAAAALyIiDwAAAADwIvIAAAAAAAD/DwAAAAAA",
-        "mimeType": "image/x-mkcd-f4",
-        "displayName": "life"
-    },
     "image2": {
         "data": "hwQLAAoAAAAA/w8AAAAAAPAA8AAAAAAADwAADwAAAAAPAADwAAAAAPAAAAAPAAAAAA8AAPAAAADwAAAADwAAAA8AAPAAAAAADwAADwAAAADwAPAAAAAAAAD/DwAAAAAA",
         "mimeType": "image/x-mkcd-f4",
@@ -23,6 +18,21 @@
         "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAGBmZmYGAAAAZmZmZuZuAABgZmZmBgAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
         "mimeType": "image/x-mkcd-f4",
         "displayName": "myImage0"
+    },
+    "image1": {
+        "data": "hwQLAAoAAAAA/w8AAAAAAPAi8gAAAAAALxIiDwAAAAAvISLyAAAAAPAiIiIPAAAAAC8iIvIAAADwIiIiDwAAAC8iIvIAAAAALyIiDwAAAADwIvIAAAAAAAD/DwAAAAAA",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "life"
+    },
+    "image6": {
+        "data": "hwRAABAAAAAdERGxHRERsdHd3b3R3d290d3dvdHd3b3R3d290d3dvdHd3b3R3d290d3dvdHdvbvR3d3d0d27u7u7u+27u7vtHRERsR0REbHR3d290d3dvdHdvbvR3d290d27u9Hd3b3RHd290d3dvdEb3b3R3d29sd3d3dHd3b27u7vtu7u77R0REbEdERGx0d3dvdHd3b3R3d290d3dvdHd3b3R3d290d3dvdHd3b3R3d290d29u9Hd3d3R3bu7u7u77bu7u+0dERGxHRERsdHd3b3R3d290d29u9Hd3b3R3bu70d3dvdEd3b3R3d290RvdvdHd3b2x3d3d0d3dvbu7u+27u7vtHRERsR0REbHR3d290d3dvdHd3b3R3d290d3dvdHd3b3R3d290d3dvdHd3b3R3b270d3d3dHdu7u7u7vtu7u77R0REbEdERGx0d3dvdHd3b3R3b270d3dvdHdu7vR3d290R3dvdHd3b3RG9290d3dvbHd3d3R3d29u7u77bu7u+0dERGxHRERsdHd3b3R3d290d3dvdHd3b3R3d290d3dvdHd3b3R3d290d3dvdHdvbvR3d3d0d27u7u7u+27u7vtHRERsR0REbHR3d290d3dvdHdvbvR3d290d27u9Hd3b3RHd290d3dvdEb3b3R3d29sd3d3dHd3b27u7vtu7u77Q==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "break"
+    },
+    "image7": {
+        "data": "hwQQABAAAAAdERGxHRERsdHd3b3R3d290d3dvdHd3b3R3d290d3dvdHd3b3R3d290d3dvdHdvbvR3d3d0d27u7u7u+27u7vtHRERsR0REbHR3d290d3dvdHdvbvR3d290d27u9Hd3b3RHd290d3dvdEb3b3R3d29sd3d3dHd3b27u7vtu7u77Q==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "break1"
     },
     "anim1": {
         "namespace": "myAnimations",

@@ -3,19 +3,6 @@ namespace myImages {
 
     helpers._registerFactory("image", function(name: string) {
         switch(helpers.stringTrim(name)) {
-            case "image1":
-            case "life":return img`
-. . f f . . . f f . . 
-. f 2 2 f . f 2 2 f . 
-f 2 2 1 2 f 2 2 2 2 f 
-f 2 1 2 2 2 2 2 2 2 f 
-f 2 2 2 2 2 2 2 2 2 f 
-. f 2 2 2 2 2 2 2 f . 
-. . f 2 2 2 2 2 f . . 
-. . . f 2 2 2 f . . . 
-. . . . f 2 f . . . . 
-. . . . . f . . . . . 
-`;
             case "image2":
             case "life0":return img`
 . . f f . . . f f . . 
@@ -93,6 +80,57 @@ f . . . . . . . . . f
 . . . . . . . e . . . . . . . . 
 . . . . . . . e . . . . . . . . 
 . . . . . . . 6 . . . . . . . . 
+`;
+            case "image1":
+            case "life":return img`
+. . f f . . . f f . . 
+. f 2 2 f . f 2 2 f . 
+f 2 2 1 2 f 2 2 2 2 f 
+f 2 1 2 2 2 2 2 2 2 f 
+f 2 2 2 2 2 2 2 2 2 f 
+. f 2 2 2 2 2 2 2 f . 
+. . f 2 2 2 2 2 f . . 
+. . . f 2 2 2 f . . . 
+. . . . f 2 f . . . . 
+. . . . . f . . . . . 
+`;
+            case "image6":
+            case "break":return img`
+d111111bd111111bd111111bd111111bd111111bd111111bd111111bd111111b
+1ddddddb1dddddbb1ddddddb1dddddbb1ddddddb1dddddbb1ddddddb1dddddbb
+1ddddddb1ddddbdb1ddddddb1ddddbdb1ddddddb1ddddbdb1ddddddb1ddddbdb
+1ddddddb1ddd11db1ddddddb1ddd11db1ddddddb1ddd11db1ddddddb1ddd11db
+1ddddddb1ddbdddb1ddddddb1ddbdddb1ddddddb1ddbdddb1ddddddb1ddbdddb
+1ddddddb1dbbdddb1ddddddb1dbbdddb1ddddddb1dbbdddb1ddddddb1dbbdddb
+1ddddddd1dbbdddd1ddddddd1dbbdddd1ddddddd1dbbdddd1ddddddd1dbbdddd
+bbbbbbdebbbbbbdebbbbbbdebbbbbbdebbbbbbdebbbbbbdebbbbbbdebbbbbbde
+d111111bd111111bd111111bd111111bd111111bd111111bd111111bd111111b
+1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb
+1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb
+1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb1ddddddb
+1dddddbb1ddddddb1dddddbb1ddddddb1dddddbb1ddddddb1dddddbb1ddddddb
+1ddddbbb1ddddddb1ddddbbb1ddddddb1ddddbbb1ddddddb1ddddbbb1ddddddb
+1ddddbbd1ddddddd1ddddbbd1ddddddd1ddddbbd1ddddddd1ddddbbd1ddddddd
+bbbbbbbebbbbbbbebbbbbbbebbbbbbbebbbbbbbebbbbbbbebbbbbbbebbbbbbbe
+`;
+            case "image7":
+            case "break1":return img`
+d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
+1 d d d d d d b 1 d d d d d b b 
+1 d d d d d d b 1 d d d d b d b 
+1 d d d d d d b 1 d d d 1 1 d b 
+1 d d d d d d b 1 d d b d d d b 
+1 d d d d d d b 1 d b b d d d b 
+1 d d d d d d d 1 d b b d d d d 
+b b b b b b d e b b b b b b d e 
+d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
+1 d d d d d d b 1 d d d d d d b 
+1 d d d d d d b 1 d d d d d d b 
+1 d d d d d d b 1 d d d d d d b 
+1 d d d d d b b 1 d d d d d d b 
+1 d d d d b b b 1 d d d d d d b 
+1 d d d d b b d 1 d d d d d d d 
+b b b b b b b e b b b b b b b e 
 `;
         }
         return null;

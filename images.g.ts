@@ -113,25 +113,6 @@ d111111bd111111bd111111bd111111bd111111bd111111bd111111bd111111b
 1ddddbbd1ddddddd1ddddbbd1ddddddd1ddddbbd1ddddddd1ddddbbd1ddddddd
 bbbbbbbebbbbbbbebbbbbbbebbbbbbbebbbbbbbebbbbbbbebbbbbbbebbbbbbbe
 `;
-            case "image7":
-            case "break1":return img`
-d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-1 d d d d d d b 1 d d d d d b b 
-1 d d d d d d b 1 d d d d b d b 
-1 d d d d d d b 1 d d d 1 1 d b 
-1 d d d d d d b 1 d d b d d d b 
-1 d d d d d d b 1 d b b d d d b 
-1 d d d d d d d 1 d b b d d d d 
-b b b b b b d e b b b b b b d e 
-d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-1 d d d d d d b 1 d d d d d d b 
-1 d d d d d d b 1 d d d d d d b 
-1 d d d d d d b 1 d d d d d d b 
-1 d d d d d b b 1 d d d d d d b 
-1 d d d d b b b 1 d d d d d d b 
-1 d d d d b b d 1 d d d d d d d 
-b b b b b b b e b b b b b b b e 
-`;
             case "image8":
             case "myImage1":return img`
 1 1 b b b b b b b b b b b b 1 1 
@@ -169,6 +150,44 @@ b b b b b b b b b b b b b b b b
 . b e e e e e e e e e e e e b . 
 . b b b b b b b b b b b b b b . 
 . . b . . . . . . . . . . b . . 
+`;
+            case "image10":
+            case "mimicchest":return img`
+1 1 b b b b b b b b b b b b 1 1 
+1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b c c b b b b b b c 
+c c c c c c b c c b c c c c c c 
+b e e e e e c b b c e e e e e b 
+b e e e e e e e e e e e e e e b 
+b c e e e e e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
+`;
+            case "image7":
+            case "break1":return img`
+b b b b b b b e b b b b b b b e 
+1 d d d d b b d 1 d d d d d d d 
+1 d d d d b b b 1 d d d d d d b 
+1 d d d d d b b 1 d d d d d d b 
+1 d d d d d d b 1 d d d d d d b 
+1 d d d d d d b 1 d d d d d d b 
+1 d d d d d d b 1 d d d d d d b 
+d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
+b b b b b b d e b b b b b b d e 
+1 d d d d d d d 1 d b b d d d d 
+1 d d d d d d b 1 d b b d d d b 
+1 d d d d d d b 1 d d b d d d b 
+1 d d d d d d b 1 d d d 1 1 d b 
+1 d d d d d d b 1 d d d d b d b 
+1 d d d d d d b 1 d d d d d b b 
+d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
 `;
         }
         return null;
@@ -478,59 +497,6 @@ b b b b b b b b b b b b b b b b
 ..fbfc..................
 ........................
 `];
-            case "myAnim0":
-            case "anim3":return [img`
-1 1 b b b b b b b b b b b b 1 1 
-1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
-b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
-b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
-b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
-b e e 4 4 4 4 4 4 4 4 4 4 e e b 
-b e e e e e e e e e e e e e e b 
-b e e e e e e e e e e e e e e b 
-b b b b b b b d d b b b b b b b 
-c b b b b b b f f b b b b b b c 
-c c c c c c b f f b c c c c c c 
-b e e e e e c b b c e e e e e b 
-b e e e e e e e e e e e e e e b 
-b c e e e e e e e e e e e e c b 
-b b b b b b b b b b b b b b b b 
-1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
-`, img`
-1 1 b b b b b b b b b b b b 1 1 
-1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
-b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
-b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
-b e e 4 4 4 4 4 4 4 4 4 4 e e b 
-b e e e e e e e e e e e e e e b 
-b e e e e e e e e e e e e e e b 
-b b b b b b b d d b b b b b b b 
-c b b b b b b f f b b b b b b c 
-c c c c c c b f f b c c c c c c 
-c c c c c c c b b c c c c c c c 
-b e e e e e c 3 3 c e e e e e b 
-b e e e e e e e e e e e e e e b 
-b c e e e e e e e e e e e e c b 
-b b b b b b b b b b b b b b b b 
-1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
-`, img`
-1 1 b b b b b b b b b b b b 1 1 
-1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
-b e e 4 4 4 4 4 4 4 4 4 4 e e b 
-b e e e e e e e e e e e e e e b 
-b e e e e e e e e e e e e e e b 
-b b b b b b b d d b b b b b b b 
-c b b b b b b f f b b b b b b c 
-c c c c c c b f f b c c c c c c 
-c c c c c c c b b c c c c c c c 
-c c c c c c c c c c c c c c c c 
-c c c c c c 3 3 3 3 c c c c c c 
-b e e e e e c 3 3 c e e e e e b 
-b e e e e e e e e e e e e e e b 
-b c e e e e e e e e e e e e c b 
-b b b b b b b b b b b b b b b b 
-1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
-`];
             case "walkmimic":
             case "anim4":return [img`
 ....................
@@ -602,59 +568,6 @@ b e e e e e e e e e e e e e e b
 b c e e e e e e e e e e e e c b 
 b b b b b b b b b b b b b b b b 
 1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
-`];
-            case "walkmimic0":
-            case "anim1":return [img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . b b b b b b b b b b b b . . 
-. . b 4 4 e e e e e e e e b . . 
-. b 4 4 e e e e e e e e e b b . 
-. 1 . 1 . 1 b b b b b b b e b . 
-. . . . . . 1 b e e e e e e b . 
-. 3 3 3 3 . . b e e e e e e b . 
-. 1 c 3 3 3 1 b e e e e e e b . 
-. b 1 c 1 3 b e e e e e e e b . 
-. b e e e e e e e e e e e e b . 
-. b b b b b b b b b b b b b b . 
-. . b . . . . . . . . . . b . . 
-`, img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . b b b b b b b b b b b b . . 
-. . b 4 4 e e e e e e e e b . . 
-. b 4 4 e e e e e e e e e b b . 
-. 1 . 1 . 1 b b b b b b b e b . 
-. . . . . . 1 b e e e e e e b . 
-. . . . . . . b e e e e e e b . 
-. . 3 3 . . 1 b e e e e e e b . 
-. . . 3 3 . . b e e e e e e b . 
-. 1 c 3 3 3 1 b e e e e e e b . 
-. b 1 c 1 3 b e e e e e e e b . 
-. b e e e e e e e e e e e e b . 
-. b b b b b b b b b b b b b b . 
-. . b . . . . . . . . . . b . . 
-`, img`
-. . . . . . . . . . . . . . . . 
-. . b b b b b b b b b b b b . . 
-. . b 4 4 e e e e e e e e b . . 
-. b 4 4 e e e e e e e e e b b . 
-. 1 . 1 . 1 b b b b b b b e b . 
-. . . . . . 1 b e e e e e e b . 
-. . . . . . . b e e e e e e b . 
-. . . . . . 1 b e e e e e e b . 
-. . . . . . . b e e e e e e b . 
-3 3 3 3 . . 1 b e e e e e e b . 
-. 3 3 3 3 . . b e e e e e e b . 
-. 1 c 3 3 3 1 b e e e e e e b . 
-. b 1 c 1 3 b e e e e e e e b . 
-. b e e e e e e e e e e e e b . 
-. b b b b b b b b b b b b b b . 
-. . b . . . . . . . . . . b . . 
 `];
             case "deathmimic":
             case "anim7":return [img`
@@ -795,6 +708,112 @@ b b b b b b b b b b b b b b b b
 ...beeeeeeeeeeeeeeeb
 ...bbbbbbbbbbbbbbbbb
 ....b.............b.
+`];
+            case "myAnim0":
+            case "anim3":return [img`
+1 1 b b b b b b b b b b b b 1 1 
+1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b f f b b b b b b c 
+c c c c c c b f f b c c c c c c 
+b e e e e e c b b c e e e e e b 
+b e e e e e e e e e e e e e e b 
+b c e e e e e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
+`, img`
+1 1 b b b b b b b b b b b b 1 1 
+1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b f f b b b b b b c 
+c c c c c c b f f b c c c c c c 
+c c c c c c c b b c c c c c c c 
+b e e e e e c 3 3 c e e e e e b 
+b e e e e e e e e e e e e e e b 
+b c e e e e e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
+`, img`
+1 1 b b b b b b b b b b b b 1 1 
+1 b e 4 4 4 4 4 4 4 4 4 4 e b 1 
+b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b f f b b b b b b c 
+c c c c c c b f f b c c c c c c 
+c c c c c c c b b c c c c c c c 
+c c c c c c c c c c c c c c c c 
+c c c c c c 3 3 3 3 c c c c c c 
+b e e e e e c 3 3 c e e e e e b 
+b e e e e e e e e e e e e e e b 
+b c e e e e e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
+`];
+            case "walkmimic0":
+            case "anim1":return [img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . b b b b b b b b b b b b . . 
+. . b 4 4 e e e e e e e e b . . 
+. b 4 4 e e e e e e e e e b b . 
+. 1 . 1 . 1 b b b b b b b e b . 
+. . . . . . 1 b e e e e e e b . 
+. 3 3 3 3 . . b e e e e e e b . 
+. 1 c 3 3 3 1 b e e e e e e b . 
+. b 1 c 1 3 b e e e e e e e b . 
+. b e e e e e e e e e e e e b . 
+. b b b b b b b b b b b b b b . 
+. . b . . . . . . . . . . b . . 
+`, img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . b b b b b b b b b b b b . . 
+. . b 4 4 e e e e e e e e b . . 
+. b 4 4 e e e e e e e e e b b . 
+. 1 . 1 . 1 b b b b b b b e b . 
+. . . . . . 1 b e e e e e e b . 
+. . . . . . . b e e e e e e b . 
+. . 3 3 . . 1 b e e e e e e b . 
+. . . 3 3 . . b e e e e e e b . 
+. 1 c 3 3 3 1 b e e e e e e b . 
+. b 1 c 1 3 b e e e e e e e b . 
+. b e e e e e e e e e e e e b . 
+. b b b b b b b b b b b b b b . 
+. . b . . . . . . . . . . b . . 
+`, img`
+. . . . . . . . . . . . . . . . 
+. . b b b b b b b b b b b b . . 
+. . b 4 4 e e e e e e e e b . . 
+. b 4 4 e e e e e e e e e b b . 
+. 1 . 1 . 1 b b b b b b b e b . 
+. . . . . . 1 b e e e e e e b . 
+. . . . . . . b e e e e e e b . 
+. . . . . . 1 b e e e e e e b . 
+. . . . . . . b e e e e e e b . 
+3 3 3 3 . . 1 b e e e e e e b . 
+. 3 3 3 3 . . b e e e e e e b . 
+. 1 c 3 3 3 1 b e e e e e e b . 
+. b 1 c 1 3 b e e e e e e e b . 
+. b e e e e e e e e e e e e b . 
+. b b b b b b b b b b b b b b . 
+. . b . . . . . . . . . . b . . 
 `];
         }
         return null;

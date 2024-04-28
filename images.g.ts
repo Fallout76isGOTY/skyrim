@@ -132,6 +132,25 @@ d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b
 1 d d d d b b d 1 d d d d d d d 
 b b b b b b b e b b b b b b b e 
 `;
+            case "image9":
+            case "myImage2":return img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . b b b b b b b b b b b b . . 
+. . b 4 4 e e e e e e e e b . . 
+. b 4 4 e e e e e e e e e b b . 
+. 1 . 1 . 1 b b b b b b b e b . 
+. . . . . . 1 b e e e e e e b . 
+. 3 3 3 3 . . b e e e e e e b . 
+. 1 c 3 3 3 1 b e e e e e e b . 
+. b 1 c 1 3 b e e e e e e e b . 
+. b e e e e e e e e e e e e b . 
+. b b b b b b b b b b b b b b . 
+. . b . . . . . . . . . . b . . 
+`;
             case "image8":
             case "myImage1":return img`
 1 1 b b b b b b b b b b b b 1 1 
@@ -151,24 +170,24 @@ b c e e e e e e e e e e e e c b
 b b b b b b b b b b b b b b b b 
 1 b b 1 1 1 1 1 1 1 1 1 1 b b 1 
 `;
-            case "image9":
-            case "myImage2":return img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . b b b b b b b b b b b b . . 
-. . b 4 4 e e e e e e e e b . . 
-. b 4 4 e e e e e e e e e b b . 
-. 1 . 1 . 1 b b b b b b b e b . 
-. . . . . . 1 b e e e e e e b . 
-. 3 3 3 3 . . b e e e e e e b . 
-. 1 c 3 3 3 1 b e e e e e e b . 
-. b 1 c 1 3 b e e e e e e e b . 
-. b e e e e e e e e e e e e b . 
-. b b b b b b b b b b b b b b . 
-. . b . . . . . . . . . . b . . 
+            case "image10":
+            case "myImage3":return img`
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
+f f f f f f f f f f f f f f f f 
 `;
         }
         return null;

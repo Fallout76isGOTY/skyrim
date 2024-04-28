@@ -4,10 +4,12 @@ namespace SpriteKind {
     export const key1 = SpriteKind.create()
     export const block = SpriteKind.create()
     export const endscreen = SpriteKind.create()
+    export const chest = SpriteKind.create()
+    export const acitvemimic = SpriteKind.create()
+    export const pixel = SpriteKind.create()
+    export const mimic = SpriteKind.create()
+    export const skull = SpriteKind.create()
 }
-controller.combos.attachCombo("", function () {
-    game.splash("f")
-})
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (houseofpain < 2) {
         houseofpain += 1
@@ -18,6 +20,70 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     }
     if (mySprite.isHittingTile(CollisionDirection.Top)) {
         houseofpain = 2
+    }
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.skull, function (sprite, otherSprite) {
+    if (monsterskull.overlapsWith(mySprite) && bone.value > 0) {
+        animation.runImageAnimation(
+        monsterskull,
+        [img`
+            ........................
+            ........................
+            ........................
+            ........................
+            ..........fffff.........
+            ........ff1111bff.......
+            .......fb1111111bf......
+            .......f111111111f......
+            ......fd1111111ffff.....
+            ......fd111dd1c111bf....
+            ......fb11fcdf1b1bff....
+            ......f11111bfbfbff.....
+            ......f1b1bdfcffff......
+            ......fbfbfcfcccf.......
+            ......ffffffffff........
+            .........ffffff.........
+            .........ffffff.........
+            .........fffffff..f.....
+            ..........fffffffff.....
+            ...........fffffff......
+            ........................
+            ........................
+            ........................
+            ........................
+            `,img`
+            ........................
+            ........................
+            ........................
+            ..........ffff..........
+            ........ff1111ff........
+            .......fb111111bf.......
+            .......f1111111dbf......
+            ......fd1111111ddf......
+            ......fd111111dddf......
+            ......fd111ddddddf......
+            ......fd111ddddddf......
+            ......fd1dddddddbf......
+            ......fd1dfbddbbff......
+            ......fbddfcdbbcf.......
+            .....ffffccddbfff.......
+            ....fcb1bbbfcffff.......
+            ....f1b1dcffffffff......
+            ....fdfdf..ffffffffff...
+            .....f.f.....ffffff.....
+            ........................
+            ........................
+            ........................
+            ........................
+            ........................
+            `],
+        500,
+        false
+        )
+        pause(1000)
+        if (monsterskull.overlapsWith(mySprite) && bone.value > 0) {
+            info.changeLifeBy(-1)
+        }
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.sword, function (sprite, otherSprite) {
@@ -249,15 +315,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         mimic.value += -50
     }
     if (bone.value <= 0) {
-        animation.stopAnimation(animation.AnimationTypes.All, monsterskull)
-        animation.runImageAnimation(
-        monsterskull,
-        assets.animation`skellydestroy`,
-        100,
-        false
-        )
-        pause(1200)
-        sprites.destroy(monsterskull)
+        death(monsterskull)
     }
     if (mimic.value <= 0) {
         animation.stopAnimation(animation.AnimationTypes.All, mimicsprite)
@@ -268,9 +326,40 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         false
         )
         pause(800)
+        ismimicactive = 0
         sprites.destroy(monsterskull)
     }
 })
+function death (mySprite: Sprite) {
+    for (let row = 0; row <= 2; row++) {
+        for (let column = 0; column <= 2; column++) {
+            newPixel = sprites.create(img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `, SpriteKind.pixel)
+            newPixel.image.setPixel(0, 0, mySprite.image.getPixel(column, row))
+            newPixel.setPosition(mySprite.x, mySprite.y)
+            newPixel.ay = 300
+            newPixel.setBounceOnWall(true)
+            newPixel.setVelocity(randint(-150, 150), randint(-150, -300))
+        }
+    }
+    sprites.destroy(mySprite)
+}
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     if (invON == true) {
     	
@@ -368,6 +457,27 @@ controller.left.onEvent(ControllerButtonEvent.Released, function () {
         animation.stopAnimation(animation.AnimationTypes.All, mySprite)
     }
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.mimic, function (sprite, otherSprite) {
+    if (mimicsprite.overlapsWith(mySprite) && mimic.value > 0) {
+        animation.runImageAnimation(
+        mimicsprite,
+        assets.animation`bitemimic`,
+        200,
+        false
+        )
+        pause(800)
+        if (mimicsprite.overlapsWith(mySprite) && mimic.value > 0) {
+            info.changeLifeBy(-1)
+        }
+    }
+})
+scene.onHitWall(SpriteKind.pixel, function (sprite, location) {
+    if (Math.percentChance(50)) {
+        sprite.setBounceOnWall(false)
+    } else if (Math.percentChance(20)) {
+        sprites.destroy(sprite)
+    }
+})
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     if (invON == true) {
     	
@@ -453,9 +563,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.key1, function (sprite, otherSpr
     key1equip = true
     mySprite.sayText("I wonder what this opens?", 500, true)
     sprites.destroy(key1sprite)
-})
-sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
-	
+    monsterskull.follow(mySprite, 20)
 })
 function pickup () {
     if (sword2 == true) {
@@ -490,12 +598,17 @@ function pickup () {
         mySprite.sayText("Its dangerous to go alone! Glad I took this.", 3000, true)
         pause(2000)
         mySprite.sayText("press A to attack", 2000, true)
-    } else if (false) {
-    	
     } else {
     	
     }
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.acitvemimic, function (sprite, otherSprite) {
+    ismimicactive = 1
+    sprites.destroy(activatemimic)
+    sprites.destroy(chestmimic)
+    tiles.placeOnTile(mimicsprite, tiles.getTileLocation(29, 8))
+    mimicsprite.follow(mySprite, 20)
+})
 controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     invON = true
     invX = mySprite.x
@@ -644,1603 +757,29 @@ controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     controller.moveSprite(mySprite, 0, 0)
 })
 info.onLifeZero(function () {
-    tiles.setCurrentTilemap(tilemap`level10`)
-    background = [img`
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffccccccccccfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffccccccccccccccccccccccfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcccccccccccccccccccccccccccccccfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffccccccccccccccccccccccccccccccccccccccfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffccccccccccccccccccccccccccccccccccccccccccfffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffccccccccccccccccccccccccccccccccccccccccccccccfffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffccccccccccccccccccccccccccccccccccccccccccccccccccfffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffccccccccccccccccccccccccccccccccccccccccccccccccccccccfffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffccccccccccccccccccccccccfffcccccccccccccccccfffcccccccccccfffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffcccccccccccccccccccccccccccffccccccccccccccccccccccfccccccccffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffccccccccccccccccccccccccccccccfffcccccccccccccccccffffffccccccccffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffccccccccccccccccccccccccccccccccfffcccccccccccccccffffffffffcccffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffccccccccccccccccccccccccccccccccccffcccccccccccfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffcccccccccccccccccccccccccccccccccccccffccccccccfffffffffcfffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffcccccccccccccccccccccccccccccccfffffcccccccfcffffffffffffcfffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffcccccccccccccccccccccccccccccccffffffcccccfffffffffffffffffffcffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffccccccccccccccccccccccccccccfffffffffcfccccccccccccfffffffffffcffffffffcccfffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffcccccccccccccccccccccffcccfffffffffffffcccccccccccccffffffffffffffffffffccccccffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffcccccccccccccccccccffffffffffffccffffccccccccfcffcccfffffffffffffffffffffccccccffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffcccccccccccccccccfffffffffffffffccffccccccccccccffccfffffffffffffffffffffffccccccfffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffccccccccccccccccfffffffffffffffffffcfccccccccccccccccffffffffffffffffffffffccccccffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffccccccccccccccfffffffffffffffffffffcfcccccccccccccccffffffffffffffffffffffffccccccfffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffcccccccccccfffffffffffffffffffffffffcccccccccccccfccfffffffffffffffffffffffffffccccfffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffcccccccccfffffffffffffffcccccfccfffccfcccccccccccffffffffffffffcfffffffffffffffffcccfffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffccccccccfffffffffffcccccccffcccffffccccccccccccccffffffffffffffffffffffffffffffffccfcffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffccccccfffffffccfffcccccffffffcccccfccccccfcffccccffffffffffffffffffffffffcccffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffcccccffffffffcccffcccccfffcffffffffccccfffcfffccccfffffffffffffcffffffffffcccccffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffcccccfffffffcccccccccccffccfffffffffccccffccfcffccffffffffcccfffcfcccccccccfcccccfffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffccfffffffffcffccfcccccffccccccffffffccccfffffccfcffffffffccccffffccfccfccccccccccfcfffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffccffffffcffcffccffcccffffcccccccfffffccccfffcfcccccccfffccffccffffcfccccffffccccccffffcffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffcffffffffffffffffcccfffffcccccccfffffcccccfccccccfcfffffccffffffffffffffffffccccccffffcffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffcffffffffccfcfcfffcfffcccccffccccccfcfccccfffffcffcccffffffccffffffffffccccfcccfffffcfffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffcccccccfffcffffccffffffccccccccccfffffffffcccfffcfcccfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffcffffffccffccccfccfffffffffcffffffcccfffffcccccffffffcccffcccffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffcfffffffffffcccccccffcfffcfcccfcfffccffccccfcccfffffffffffffffffffffffffffffffffffffcfffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffcffffffffffffccfccccccfffcffccffffcfccffcffccfffffffffffcfcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffccffffffffffffffffffcccfcffffffffffffffcffffffcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcfffffffcffffcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffccfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffcbbbcffbcffffbfbbbbbbffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffcddd1cfdbfffcdfdd1ddbffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffcdffbcfdbfffcdfffbbffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffcdccdcfdbfffcdfffbbffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffcd111dfdbfffcdfffbbffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffcdcfcdbdbfffcdfffbbffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffcdfffbdbbfffc1fffbbffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffcdcccdcfdbccbdfffbbfccffcffccffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffcd111bffcd11dffffbbfd1ff1cfd1cfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffccffcfffcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffccccccccffffcfcccccffffcccccccfffffcfccccccccffffcfcccccffcccccffffcccccffcccccfcccccfcffffccffccffccccccccccfffffffffffffffffffffffffffffffffff
-        fffffffffffffffb11111bdffff1cb1111ffffb1111dbcffffdc11111dddffffdcb111dbfb1111ffffb111dbfb1111f1111dc1ffffddcb11bfd1111bd11dbcfffffffffffffffffffffffffffffffff
-        fffffffffffffffffb1ffcdffff1cbbfffffffbdffffbcffffdcffddffbdffffdcbdffb1cbbfffffffbdffb1cdcffff1cfffc1ffffddc1cc1cddffffdcfcddfffffffffffffffffffffffffffffffff
-        fffffffffffffffffb1fffdffff1cbbfffffffbdffffbcffffdcffddffbdffffdcbdfff1bbbfffffffbdfff1bdcffff1cfffc1ffffddcbffffddffffdcffcdcffffffffffffffffffffffffffffffff
-        fffffffffffffffffb1fffdcccc1cbdccfffffb1cccfbcffffdcffddffbdffffdcbdffc1cbdccfffffbdffc1bdbccff1bccfc1ffffddcdbcffddccffdcfffbbffffffffffffffffffffffffffffffff
-        fffffffffffffffffb1fffddbbb1cbdddcffffb1ddcfbcffffdcffddffbdffffdcb1bb1bfbdddcffffb1bb1bfddddcf1dddfc1ffffddfcb1dcd1ddffdcfffbdffffffffffffffffffffffffffffffff
-        fffffffffffffffffb1fffdffff1cbbfffffffbdffffbbfffcdcffddffbdffffdcb1bddffbbfffffffb1bddffdcffff1cfffc1ffffddfffcdcddffffdcfffdcffffffffffffffffffffffffffffffff
-        fffffffffffffffffb1fffdffff1cbbfffffffbdffffc1cffb1fffddffc1bffc1cbdfb1ffbbfffffffbdfb1ffdcffff1cfffcdcffc1bfcffbbddffffdcffc1fffffffffffffffffffffffffffffffff
-        fffffffffffffffffb1fffdffff1cbdbbbffffbdfffffb1bddcfffddfffb1dd1bfbdffddfbdbbbffffbdffddcddbbbf1cffffc1dd1bfcddddcd1bbbcddb1dcfffffffffffffffffffffffffffffffff
-        fffffffffffffffffccfffcffffcfcccccffffccffffffccccffffccffffccccffccfffcfcccccffffccfffcccccccfcffffffccccfffccccfcccccccccccffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcbbbbbccbddbcfffffffcbdbccccfffccffffcffffcffffccffcbdbcffcbddddfffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffccb1ccbdbccddcfffffc1bccdcbcfffbbfffbdffffdcfffbbfb1bcbdffcdccccfffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc1ffdbffffddffffc1cfffffbcfffbbfffd1cfff11fffbbf1cffffffcdfffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc1ffdcfffff1bfffcdffffffbbfffbbffb1dbfffdd1ffbbdbfffffffcdcffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc1fcdffffff1bfffcbffffffb11111bffbbcdcffdcb1cbb1bfffbbbbcd11dcfffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc1ffdcfffff1bfffcdffffffbbcccdbfc1ffdcffdcfbddbdbfffccddcdcccffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc1ff1bffffddffffc1cfffffbcfffbbfb1dd1dffdcffd1bc1cffffddcdfffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc1ffc1dfcd1cfffffb1bfc1cbcfffbbf1dddd1cfdcffcdbfb1cfcddfcdcffffcbffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcdfffcbddbcfffffffbbddbcccfffbccbffffbbfbffffccffbdddbffcbddddfddcfffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcffffffffffffffffffffffffffffffcffffffffffffcffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        `, img`
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffce44eeecffffee44efffffceeeeeefffffffeee4eeeffffeb4eeffffffffee44eeeee4eefffffffeeeeeeecceeeeeeeeeeeeefffee44eeeee4eefffffffffffffffffffffffff
-        ffffffffffffffffffffe44fffffffffeefffffeefffffeeefffffffe4efffffffceefffffffffffe4fffffee4ecfffffffe4effffff44effffffebfffffe4effffeeeeefffffffffffffffffffffff
-        fffffffffffffffffffffe4effffffffefffffeefffffffceeffffffe4fffffffffecfffffffffffe4fffffffe4ecfffffff4effffffe4ffffffffefffffe4fffffffebeeffffffffffffffffffffff
-        fffffffffffffffffffffe4efffffffeeffffebfffffffffebcfffffe4fffffffffecfffffffffffe4ffffffffe4efffffff4effffffe4ffffffffefffffe4ffffffffebeffffffffffffffffffffff
-        ffffffffffffffffffffffe4effffffeffffcbeffffffffffeefffffe4fffffffffecfffffffffffe4fffffffffe4effffff4effffffe4ffffffffefffffe4fffffffffe4efffffffffffffffffffff
-        ffffffffffffffffffffffe4efffffecffffe4fffffffffffe4effffebfffffffffccfffffffffffe4fffffffffe4effffff4effffffe4ffffffffffffffe4fffffffffc4bfffffffffffffffffffff
-        fffffffffffffffffffffffbecffffefffffeefffffffffffe4effffebfffffffffccfffffffffffe4ffffffffffe4efffff4effffffe4ffffffffffffffe4ffffffffffe4effffffffffffffffffff
-        fffffffffffffffffffffffe4efffefffffc4efffffffffffc4effffebffffffffffcfffffffffffe4ffffffffffe4efffff4effffffe4ffffffffffffffe4ffffffffffe4bffffffffffffffffffff
-        ffffffffffffffffffffffffebfffcfffffe4effffffffffffeeffffebffffffffffcfffffffffffe4ffffffffffe4efffff4effffffe4ffffffccffffffe4ffffffffffe44ffffffffffffffffffff
-        ffffffffffffffffffffffffe4efccfffffe4effffffffffffe4efffe4ffffffffffcfffffffffffe4ffffffffffe44fffff4effffffe4ffffffecffffffe4ffffffffffc44ffffffffffffffffffff
-        fffffffffffffffffffffffffebeeffffffe4effffffffffffe4efffe4ffffffffffcfffffffffffe4ffffffffffe44fffff4effffffe4eeeeeeeeffffffe4ffffffffffc44ffffffffffffffffffff
-        fffffffffffffffffffffffffe4ecffffffe4effffffffffffe4efffe4ffffffffffcfffffffffffe4ffffffffffe4efffff4effffffe4ffffffeeffffffe4ffffffffffc44ffffffffffffffffffff
-        fffffffffffffffffffffffffceefffffffe4effffffffffffe4cfffe4ffffffffffefffffffffffe4ffffffffffe4efffff4effffffe4ffffffceffffffe4ffffffffffc44ffffffffffffffffffff
-        ffffffffffffffffffffffffffeefffffffe4effffffffffffeeffffe4ffffffffffefffffffffffe4ffffffffffe4efffff4effffffe4fffffffcffffffe4ffffffffffe44ffffffffffffffffffff
-        ffffffffffffffffffffffffffeefffffffc4efffffffffffc4effffe4ffffffffffefffffffffffe4ffffffffffe4efffff4effffffe4ffffffffffffffe4ffffffffffe4effffffffffffffffffff
-        ffffffffffffffffffffffffffeeffffffffe4fffffffffffe4effffe4ffffffffffcfffffffffffe4ffffffffffe4cfffff4effffffe4ffffffffffffffe4ffffffffffe4effffffffffffffffffff
-        ffffffffffffffffffffffffffeeffffffffe4effffffffffe4cffffe4fffffffffcffffffffffffe4fffffffffc4effffff4effffffe4ffffffffffcfffe4ffffffffff4bfffffffffffffffffffff
-        ffffffffffffffffffffffffffeeffffffffceeffffffffffeefffffe4cffffffffeffffffffffffe4fffffffffb4effffff4effffffe4ffffffffffefffe4cffffffffe4efffffffffffffffffffff
-        ffffffffffffffffffffffffffeefffffffffe4effffffffeeffffffceeffffffffeffffffffffffe4ffffffffe4efffffff4effffffe4fffffffffeefffe4efffffffebeffffffffffffffffffffff
-        ffffffffffffffffffffffffffeeffffffffffeefffffffcecfffffffe4fffffffefffffffffffff44effffffebecffffffc4effffffe4fffffffffecfffe4effffffeeeeffffffffffffffffffffff
-        fffffffffffffffffffffffffe44effffffffffeecffffeecfffffffffebeffffeeffffffffffffe444effffebecfffffffe4eefffffe4effffffeeecffe44beffffebeefffffffffffffffffffffff
-        fffffffffffffffffffffffceeeeeecfffffffffceeeeeeffffffffffffeeeeeecffffffffffffeeeeeeeeeeeefffffffeeeeeeeffeeeeeeeeeeeeeeffeeeeeeeeeeeefffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        `, img`
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffff2222222fe222222efefe222222efefe222222ffffe22ffff2ffffffffffe2effffe22fefe222222ff222222efeff222222efe2effff2ffffffffffffffffffffffff
-        fffffffffffffffffffffffffffefffffffeffffffef2ffffffffffefefffffffffffffffff2ffffffffff2feffffef2fefefffffffeffffffffefeffffffefeff2fff2ffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffe222222ef2ffffffffffefefffffffff2fff2fff2ffffffffff2ffeff2ff2fef2222222ff222222efefeffffffefefffeff2ffffffffffffffffffffffff
-        fffffffffffffffffffffffffffefffffffeffffeeff2ffffffffffefeffffffffe2eee2eff2ffffffffff2ffeffeff2fefffffffeffffffffefefeffffffefeffffef2ffffffffffffffffffffffff
-        fffffffffffffffffffffffffff2222222fefffffeefeffffffffffef2222222ffefffffeff222222effff2fff22fff2fef2222222ff222222efeff222222efeffffe22ffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffeeeeeefffffeffffffffffffffffffffffffeeeeeeefffeeeeeeffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffeffffffffff2feffffef2fffffffeffffffefeffffffef2ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffffffefff2fffef2fffffffeffffffef2ffffffef2ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffeeeeeeefff2fffefffef2fffffffeffffffefefffe2fff2ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffeffffffffeeffffeffefefffffff2ffffffefeffffeeff2ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ffffffffffffffffffffffffffffffffffffffffffffffffffffffeffffffffeffffff2fefe222222ff222222ffefffffeefe222222ffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffecccccccccccccccccccccccccccccceffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcffffffffccfcfcfcfcccfffffffffceffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcffffffffcfffcffcffcfffffffffcefffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcffffffffccfcfcfcffcffffffffceffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        `]
-    scene.setBackgroundImage(background._pickRandom())
-    sprites.destroyAllSpritesOfKind(SpriteKind.Player)
+	
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.block, function (sprite, otherSprite) {
-    mySprite.ay = 0
-    mySprite.vy = 0
-    if (animation2 == 1) {
-    	
-    } else {
-        animation.runImageAnimation(
-        crackblock3,
-        [img`
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            d . . . . . . . . . . . . . . . 
-            1 d d . . . . . . . . d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . d b b 
-            1 . . . . . . . . . . d . . . b 
-            1 d . . . d d b 1 d d d 1 1 . . 
-            1 d d d . . d b 1 d d b d d d b 
-            1 d d d d . . b 1 d b b d d d b 
-            1 d d d d d . . 1 d b b d d d d 
-            b b b b b b d . b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . 1 . . 
-            . . . d . . d b 1 d d . . d d b 
-            . . d d d . . b 1 d b b . . . b 
-            . d d d d d . . 1 d b b d . . d 
-            . b b b b b d . b b b b b b . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 . 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . d . . . . . . . . . . . . 
-            . . d d d . . b 1 . . . . . . . 
-            . d d d d d . . 1 d b . . . . . 
-            . b b b b b d . b b b b . . . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            d 1 1 1 1 1 1 . d 1 . . . . . . 
-            1 d d d d d d b 1 d . . . . . . 
-            1 d d d d d d b 1 d d d d d . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . . . . 
-            . . . d d d d b 1 d d d . . . . 
-            . d d d d d b b 1 d d d d d . . 
-            . d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . 1 . . . . . . . 
-            . . . . . . b b 1 d d . . . . . 
-            . . . . . b b b 1 d d d . . . . 
-            . . . d d b b d 1 d d d d . . . 
-            . . b b b b b e b b b b b b . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `],
-        100,
-        false
-        )
-        animation.runImageAnimation(
-        crackblock4,
-        [img`
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            d . . . . . . . . . . . . . . . 
-            1 d d . . . . . . . . d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . d b b 
-            1 . . . . . . . . . . d . . . b 
-            1 d . . . d d b 1 d d d 1 1 . . 
-            1 d d d . . d b 1 d d b d d d b 
-            1 d d d d . . b 1 d b b d d d b 
-            1 d d d d d . . 1 d b b d d d d 
-            b b b b b b d . b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . 1 . . 
-            . . . d . . d b 1 d d . . d d b 
-            . . d d d . . b 1 d b b . . . b 
-            . d d d d d . . 1 d b b d . . d 
-            . b b b b b d . b b b b b b . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 . 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . d . . . . . . . . . . . . 
-            . . d d d . . b 1 . . . . . . . 
-            . d d d d d . . 1 d b . . . . . 
-            . b b b b b d . b b b b . . . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            d 1 1 1 1 1 1 . d 1 . . . . . . 
-            1 d d d d d d b 1 d . . . . . . 
-            1 d d d d d d b 1 d d d d d . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . . . . 
-            . . . d d d d b 1 d d d . . . . 
-            . d d d d d b b 1 d d d d d . . 
-            . d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . 1 . . . . . . . 
-            . . . . . . b b 1 d d . . . . . 
-            . . . . . b b b 1 d d d . . . . 
-            . . . d d b b d 1 d d d d . . . 
-            . . b b b b b e b b b b b b . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `],
-        100,
-        false
-        )
-        animation.runImageAnimation(
-        crackblock2,
-        [img`
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            d . . . . . . . . . . . . . . . 
-            1 d d . . . . . . . . d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . d b b 
-            1 . . . . . . . . . . d . . . b 
-            1 d . . . d d b 1 d d d 1 1 . . 
-            1 d d d . . d b 1 d d b d d d b 
-            1 d d d d . . b 1 d b b d d d b 
-            1 d d d d d . . 1 d b b d d d d 
-            b b b b b b d . b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . 1 . . 
-            . . . d . . d b 1 d d . . d d b 
-            . . d d d . . b 1 d b b . . . b 
-            . d d d d d . . 1 d b b d . . d 
-            . b b b b b d . b b b b b b . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 . 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . d . . . . . . . . . . . . 
-            . . d d d . . b 1 . . . . . . . 
-            . d d d d d . . 1 d b . . . . . 
-            . b b b b b d . b b b b . . . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            d 1 1 1 1 1 1 . d 1 . . . . . . 
-            1 d d d d d d b 1 d . . . . . . 
-            1 d d d d d d b 1 d d d d d . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . . . . 
-            . . . d d d d b 1 d d d . . . . 
-            . d d d d d b b 1 d d d d d . . 
-            . d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . 1 . . . . . . . 
-            . . . . . . b b 1 d d . . . . . 
-            . . . . . b b b 1 d d d . . . . 
-            . . . d d b b d 1 d d d d . . . 
-            . . b b b b b e b b b b b b . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `],
-        100,
-        false
-        )
-        animation.runImageAnimation(
-        crackblock1,
-        [img`
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            d . . . . . . . . . . . . . . . 
-            1 d d . . . . . . . . d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . d b b 
-            1 . . . . . . . . . . d . . . b 
-            1 d . . . d d b 1 d d d 1 1 . . 
-            1 d d d . . d b 1 d d b d d d b 
-            1 d d d d . . b 1 d b b d d d b 
-            1 d d d d d . . 1 d b b d d d d 
-            b b b b b b d . b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . 1 . . 
-            . . . d . . d b 1 d d . . d d b 
-            . . d d d . . b 1 d b b . . . b 
-            . d d d d d . . 1 d b b d . . d 
-            . b b b b b d . b b b b b b . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 . 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . d . . . . . . . . . . . . 
-            . . d d d . . b 1 . . . . . . . 
-            . d d d d d . . 1 d b . . . . . 
-            . b b b b b d . b b b b . . . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            d 1 1 1 1 1 1 . d 1 . . . . . . 
-            1 d d d d d d b 1 d . . . . . . 
-            1 d d d d d d b 1 d d d d d . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . . . . 
-            . . . d d d d b 1 d d d . . . . 
-            . d d d d d b b 1 d d d d d . . 
-            . d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . 1 . . . . . . . 
-            . . . . . . b b 1 d d . . . . . 
-            . . . . . b b b 1 d d d . . . . 
-            . . . d d b b d 1 d d d d . . . 
-            . . b b b b b e b b b b b b . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `],
-        100,
-        false
-        )
-        animation.runImageAnimation(
-        crackblock5,
-        [img`
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            d . . . . . . . . . . . . . . . 
-            1 d d . . . . . . . . d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . d b b 
-            1 . . . . . . . . . . d . . . b 
-            1 d . . . d d b 1 d d d 1 1 . . 
-            1 d d d . . d b 1 d d b d d d b 
-            1 d d d d . . b 1 d b b d d d b 
-            1 d d d d d . . 1 d b b d d d d 
-            b b b b b b d . b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . 1 . . 
-            . . . d . . d b 1 d d . . d d b 
-            . . d d d . . b 1 d b b . . . b 
-            . d d d d d . . 1 d b b d . . d 
-            . b b b b b d . b b b b b b . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 . 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . d . . . . . . . . . . . . 
-            . . d d d . . b 1 . . . . . . . 
-            . d d d d d . . 1 d b . . . . . 
-            . b b b b b d . b b b b . . . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            d 1 1 1 1 1 1 . d 1 . . . . . . 
-            1 d d d d d d b 1 d . . . . . . 
-            1 d d d d d d b 1 d d d d d . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . . . . 
-            . . . d d d d b 1 d d d . . . . 
-            . d d d d d b b 1 d d d d d . . 
-            . d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . 1 . . . . . . . 
-            . . . . . . b b 1 d d . . . . . 
-            . . . . . b b b 1 d d d . . . . 
-            . . . d d b b d 1 d d d d . . . 
-            . . b b b b b e b b b b b b . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `],
-        100,
-        false
-        )
-        animation.runImageAnimation(
-        crackblock6,
-        [img`
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            d . . . . . . . . . . . . . . . 
-            1 d d . . . . . . . . d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . d b b 
-            1 . . . . . . . . . . d . . . b 
-            1 d . . . d d b 1 d d d 1 1 . . 
-            1 d d d . . d b 1 d d b d d d b 
-            1 d d d d . . b 1 d b b d d d b 
-            1 d d d d d . . 1 d b b d d d d 
-            b b b b b b d . b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . 1 . . 
-            . . . d . . d b 1 d d . . d d b 
-            . . d d d . . b 1 d b b . . . b 
-            . d d d d d . . 1 d b b d . . d 
-            . b b b b b d . b b b b b b . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 . 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . d . . . . . . . . . . . . 
-            . . d d d . . b 1 . . . . . . . 
-            . d d d d d . . 1 d b . . . . . 
-            . b b b b b d . b b b b . . . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            d 1 1 1 1 1 1 . d 1 . . . . . . 
-            1 d d d d d d b 1 d . . . . . . 
-            1 d d d d d d b 1 d d d d d . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . . . . 
-            . . . d d d d b 1 d d d . . . . 
-            . d d d d d b b 1 d d d d d . . 
-            . d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . 1 . . . . . . . 
-            . . . . . . b b 1 d d . . . . . 
-            . . . . . b b b 1 d d d . . . . 
-            . . . d d b b d 1 d d d d . . . 
-            . . b b b b b e b b b b b b . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `],
-        100,
-        false
-        )
-        animation.runImageAnimation(
-        crackblock7,
-        [img`
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            d . . . . . . . . . . . . . . . 
-            1 d d . . . . . . . . d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . d b b 
-            1 . . . . . . . . . . d . . . b 
-            1 d . . . d d b 1 d d d 1 1 . . 
-            1 d d d . . d b 1 d d b d d d b 
-            1 d d d d . . b 1 d b b d d d b 
-            1 d d d d d . . 1 d b b d d d d 
-            b b b b b b d . b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . 1 . . 
-            . . . d . . d b 1 d d . . d d b 
-            . . d d d . . b 1 d b b . . . b 
-            . d d d d d . . 1 d b b d . . d 
-            . b b b b b d . b b b b b b . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 . 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . d . . . . . . . . . . . . 
-            . . d d d . . b 1 . . . . . . . 
-            . d d d d d . . 1 d b . . . . . 
-            . b b b b b d . b b b b . . . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            d 1 1 1 1 1 1 . d 1 . . . . . . 
-            1 d d d d d d b 1 d . . . . . . 
-            1 d d d d d d b 1 d d d d d . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . . . . 
-            . . . d d d d b 1 d d d . . . . 
-            . d d d d d b b 1 d d d d d . . 
-            . d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . 1 . . . . . . . 
-            . . . . . . b b 1 d d . . . . . 
-            . . . . . b b b 1 d d d . . . . 
-            . . . d d b b d 1 d d d d . . . 
-            . . b b b b b e b b b b b b . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `],
-        100,
-        false
-        )
-        animation.runImageAnimation(
-        crackblock8,
-        [img`
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            d . . . . . . . . . . . . . . . 
-            1 d d . . . . . . . . d d d b b 
-            1 d d d d d d b 1 d d d d b d b 
-            1 d d d d d d b 1 d d d 1 1 d b 
-            1 d d d d d d b 1 d d b d d d b 
-            1 d d d d d d b 1 d b b d d d b 
-            1 d d d d d d d 1 d b b d d d d 
-            b b b b b b d e b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . d b b 
-            1 . . . . . . . . . . d . . . b 
-            1 d . . . d d b 1 d d d 1 1 . . 
-            1 d d d . . d b 1 d d b d d d b 
-            1 d d d d . . b 1 d b b d d d b 
-            1 d d d d d . . 1 d b b d d d d 
-            b b b b b b d . b b b b b b d e 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . 1 . . 
-            . . . d . . d b 1 d d . . d d b 
-            . . d d d . . b 1 d b b . . . b 
-            . d d d d d . . 1 d b b d . . d 
-            . b b b b b d . b b b b b b . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 1 . 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d d b 1 d d d d d d b 
-            1 d d d d d b b 1 d d d d d d b 
-            1 d d d d b b b 1 d d d d d d b 
-            1 d d d d b b d 1 d d d d d d d 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . d . . . . . . . . . . . . 
-            . . d d d . . b 1 . . . . . . . 
-            . d d d d d . . 1 d b . . . . . 
-            . b b b b b d . b b b b . . . . 
-            d 1 1 1 1 1 1 b d 1 1 1 1 1 . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            d 1 1 1 1 1 1 . d 1 . . . . . . 
-            1 d d d d d d b 1 d . . . . . . 
-            1 d d d d d d b 1 d d d d d . . 
-            1 d d d d d d b 1 d d d d d d . 
-            1 d d d d d b b 1 d d d d d d . 
-            1 d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . d d b 1 d . . . . . . 
-            . . . d d d d b 1 d d d . . . . 
-            . d d d d d b b 1 d d d d d . . 
-            . d d d d b b b 1 d d d d d d . 
-            1 d d d d b b d 1 d d d d d d . 
-            b b b b b b b e b b b b b b b e 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . 1 . . . . . . . 
-            . . . . . . b b 1 d d . . . . . 
-            . . . . . b b b 1 d d d . . . . 
-            . . . d d b b d 1 d d d d . . . 
-            . . b b b b b e b b b b b b . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `],
-        100,
-        false
-        )
-        pause(900)
-        sprites.destroy(crackblock1)
-        sprites.destroy(crackblock2)
-        sprites.destroy(crackblock3)
-        sprites.destroy(crackblock4)
-        sprites.destroy(crackblock5)
-        sprites.destroy(crackblock6)
-        sprites.destroy(crackblock7)
-        sprites.destroy(crackblock8)
-    }
-    animation2 = 1
-    mySprite.ay = 110
-})
-let background: Image[] = []
 let invX = 0
 let key1equip = false
 let invON = false
+let newPixel: Sprite = null
 let direction = 0
 let sword2 = false
-let houseofpain = 0
-let animation2 = 0
-let crackblock8: Sprite = null
-let crackblock7: Sprite = null
-let crackblock6: Sprite = null
-let crackblock5: Sprite = null
-let crackblock4: Sprite = null
-let crackblock3: Sprite = null
-let crackblock2: Sprite = null
-let crackblock1: Sprite = null
+let ismimicactive = 0
 let inventory: boolean[] = []
 let bone: StatusBarSprite = null
 let monsterskull: Sprite = null
 let key1sprite: Sprite = null
 let swordsprite: Sprite = null
+let houseofpain = 0
 let mySprite: Sprite = null
 let mimic: StatusBarSprite = null
+let activatemimic: Sprite = null
+let chestmimic: Sprite = null
 let mimicsprite: Sprite = null
-mimicsprite = sprites.create(assets.image`myImage2`, SpriteKind.Enemy)
-tiles.placeOnTile(mimicsprite, tiles.getTileLocation(40, 8))
+mimicsprite = sprites.create(assets.image`myImage2`, SpriteKind.mimic)
+chestmimic = sprites.create(assets.image`myImage1`, SpriteKind.chest)
+activatemimic = sprites.create(assets.image`myImage3`, SpriteKind.acitvemimic)
 mimic = statusbars.create(20, 4, StatusBarKind.Health)
 mimic.attachToSprite(mimicsprite)
 mimic.value = 100
@@ -2264,6 +803,7 @@ mySprite = sprites.create(img`
     . . . . . f f . . f f . . . . . 
     `, SpriteKind.Player)
 tiles.placeOnTile(mySprite, tiles.getTileLocation(10, 8))
+houseofpain = 0
 scene.cameraFollowSprite(mySprite)
 mySprite.ay = 110
 controller.moveSprite(mySprite, 100, 0)
@@ -2271,109 +811,17 @@ swordsprite = sprites.create(assets.image`myImage0`, SpriteKind.sword)
 key1sprite = sprites.create(assets.image`myImage`, SpriteKind.key1)
 tiles.placeOnTile(swordsprite, tiles.getTileLocation(0, 6))
 tiles.placeOnTile(key1sprite, tiles.getTileLocation(13, 2))
-monsterskull = sprites.create(assets.image`sword`, SpriteKind.Enemy)
+monsterskull = sprites.create(assets.image`sword`, SpriteKind.skull)
 tiles.placeOnTile(monsterskull, tiles.getTileLocation(23, 8))
 bone = statusbars.create(20, 4, StatusBarKind.Health)
 bone.attachToSprite(monsterskull)
 bone.value = 100
 inventory = []
 info.setLife(3)
-crackblock1 = sprites.create(assets.image`break1`, SpriteKind.block)
-crackblock2 = sprites.create(assets.image`break1`, SpriteKind.block)
-crackblock3 = sprites.create(assets.image`break1`, SpriteKind.block)
-crackblock4 = sprites.create(assets.image`break1`, SpriteKind.block)
-crackblock5 = sprites.create(assets.image`break1`, SpriteKind.block)
-crackblock6 = sprites.create(assets.image`break1`, SpriteKind.block)
-crackblock7 = sprites.create(assets.image`break1`, SpriteKind.block)
-crackblock8 = sprites.create(assets.image`break1`, SpriteKind.block)
-tiles.placeOnTile(crackblock1, tiles.getTileLocation(27, 9))
-tiles.placeOnTile(crackblock2, tiles.getTileLocation(28, 9))
-tiles.placeOnTile(crackblock3, tiles.getTileLocation(29, 9))
-tiles.placeOnTile(crackblock4, tiles.getTileLocation(30, 9))
-tiles.placeOnTile(crackblock5, tiles.getTileLocation(31, 9))
-tiles.placeOnTile(crackblock6, tiles.getTileLocation(32, 9))
-tiles.placeOnTile(crackblock7, tiles.getTileLocation(33, 9))
-tiles.placeOnTile(crackblock8, tiles.getTileLocation(34, 9))
-animation2 = 0
+let animation2 = 0
 mySprite.sayText("Hey, I'm finally awake.", 1500, true)
-forever(function () {
-    if (monsterskull.overlapsWith(mySprite) && bone.value > 0) {
-        animation.runImageAnimation(
-        monsterskull,
-        [img`
-            ........................
-            ........................
-            ........................
-            ........................
-            ..........fffff.........
-            ........ff1111bff.......
-            .......fb1111111bf......
-            .......f111111111f......
-            ......fd1111111ffff.....
-            ......fd111dd1c111bf....
-            ......fb11fcdf1b1bff....
-            ......f11111bfbfbff.....
-            ......f1b1bdfcffff......
-            ......fbfbfcfcccf.......
-            ......ffffffffff........
-            .........ffffff.........
-            .........ffffff.........
-            .........fffffff..f.....
-            ..........fffffffff.....
-            ...........fffffff......
-            ........................
-            ........................
-            ........................
-            ........................
-            `,img`
-            ........................
-            ........................
-            ........................
-            ..........ffff..........
-            ........ff1111ff........
-            .......fb111111bf.......
-            .......f1111111dbf......
-            ......fd1111111ddf......
-            ......fd111111dddf......
-            ......fd111ddddddf......
-            ......fd111ddddddf......
-            ......fd1dddddddbf......
-            ......fd1dfbddbbff......
-            ......fbddfcdbbcf.......
-            .....ffffccddbfff.......
-            ....fcb1bbbfcffff.......
-            ....f1b1dcffffffff......
-            ....fdfdf..ffffffffff...
-            .....f.f.....ffffff.....
-            ........................
-            ........................
-            ........................
-            ........................
-            ........................
-            `],
-        500,
-        false
-        )
-        pause(1000)
-        if (monsterskull.overlapsWith(mySprite) && bone.value > 0) {
-            info.changeLifeBy(-1)
-        }
-    }
-    if (mimicsprite.overlapsWith(mySprite) && mimic.value > 0) {
-        animation.runImageAnimation(
-        mimicsprite,
-        assets.animation`bitemimic`,
-        200,
-        false
-        )
-        pause(800)
-        if (mimicsprite.overlapsWith(mySprite) && mimic.value > 0) {
-            info.changeLifeBy(-1)
-        }
-    }
-})
-forever(function () {
-    if (key1equip == true) {
-        monsterskull.follow(mySprite, 20)
-    }
-})
+tiles.placeOnTile(mimicsprite, tiles.getTileLocation(50, 8))
+tiles.placeOnTile(chestmimic, tiles.getTileLocation(29, 8))
+tiles.placeOnTile(activatemimic, tiles.getTileLocation(24, 8))
+ismimicactive = 0
+death(mySprite)
